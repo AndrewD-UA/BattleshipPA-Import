@@ -1,0 +1,16 @@
+/bin/
+
+.classpath
+.project
+
+.html
+.js
+.css
+
+/doc/
+/legal/
+/model/
+/script-dir/
+/resources/
+/Tests/
+/controller_view/

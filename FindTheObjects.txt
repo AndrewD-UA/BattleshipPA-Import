@@ -1,0 +1,41 @@
+Class Candidates:
+- MainWindowObject
+  - Primary window, contains options to do all options such as start a new game
+  - Loads and unloads other scenes based on user input
+
+- Various scenes:
+	- Options scene
+	- ShipPicker (determine placement of ships) scene
+	- Play (contains board)
+	- Start scene (contains buttons to start a new game or change options)
+
+- Enum to determine types of property changes.  This standardizes the values of firing events across all scenes.
+
+- Board
+  - Allows selection of moves graphically
+  - Primary Graphical Interface for the game
+
+- ShipCollection
+  - Contains all placed ships on a board
+  - Contains methods to check for hits
+
+- Ship
+  - Set for a finite location
+  - Tracks its own damage
+
+- Attack animation
+  - Object which is spawned, travels between two ships, and despawns
+
+- AI Object
+  - For singleplayer game, handles movement
+  - Is created with a new game/board and references a particular level of AI
+
+- Easy/Medium/Hard/Extreme AI Classes
+  - Different algorithms to implement next move
+  - Easy picks randomly
+  - Medium will not pick square it's already picked
+  - Hard will randomly pick until it hits a ship, then it will fire at surrounding squares until the ship is sunk.
+  - Extreme will fire at the statistically most likely squares for ship placement based on scraped data.  
+  	Furthermore, once it hits a ship, it will fire around the ship until it detects the direction of the ship's orientation.
+  	It will then only fire along the ship's axis until the ship is sunk.
+  
