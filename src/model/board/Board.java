@@ -173,7 +173,6 @@ public class Board implements Serializable{
 		// Present statistics to listeners if this was a board a player was attacking
 		if(isAI) {
 			GameplayResult gr = new GameplayResult(hitCount, movesCount, startTime, LocalTime.now(), 5 - size());
-			System.out.printf("%d : %d\n", hitCount, movesCount);
 			PropertyChangeEvent pce2 = new PropertyChangeEvent(this, AllProperties.GAME_STATS_READY.property(), null, gr);
 			pcs.firePropertyChange(pce2);
 		}

@@ -171,9 +171,7 @@ public class PlayBattleship extends Application implements PropertyChangeListene
 		
 		// Logic for manipulating fullscreen mode
 		if (prop.equals(AllProperties.SET_FULLSCREEN.property())) {
-			System.out.println("received fullscreen");
 			isFullscreen = !isFullscreen;
-			System.out.println(isFullscreen);
 			stage.setMaximized(isFullscreen);
 			stage.setFullScreen(isFullscreen);
 			if (!isFullscreen) {
