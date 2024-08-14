@@ -135,7 +135,7 @@ public class HelpScreen extends SwitchableScreen {
                     displayStaticImage(centerPane, width, height, "src/img2/endHelp.png");
                 })
         );
-
+        sequenceTimeline.setCycleCount(Timeline.INDEFINITE);
         sequenceTimeline.play();
     }
 

@@ -41,7 +41,7 @@ public class OptionsScreen extends SwitchableScreen {
 	private GridPane allOptions;
 	
 	private Button helpButton = new Button("Help Screen");	
-	private Button menuButton = new Button("Main Menu");
+	private Button menuButton = new Button("Quit Game");
 	private Button fullscreenButton = new Button("Fullscreen");
 	private Button backButton = new Button("Exit Options");
 	private Slider soundSlider = new Slider(0, 100, 50);
