@@ -229,4 +229,16 @@ public class ShipCollection implements Iterable<Ship> {
 		return result + "\n";
 
 	}
+	
+	/**
+	 * Instantly destroy a ship using the same method as a player move.
+	 * @param s	Ship to destroy.
+	 */
+	public void cheatDestroyShip(Ship s) {
+		for (int i = 0; i < s.getLength(); i++) {
+			s.hitShip(i, false);
+		}
+		
+		shipsRemaining--;
+	}
 }

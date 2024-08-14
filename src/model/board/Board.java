@@ -124,7 +124,6 @@ public class Board implements Serializable{
 		// If a move has been made on the AI's board, and we still need to increment the counter
 		// schedule a task to do so
 		if (isAI && specialAbilityCounter < 100 && !testing) {
-			specialAbilityCounter++;
 			incrementSpecialAbilityCounter();
 		}
 				
@@ -147,6 +146,8 @@ public class Board implements Serializable{
 	}
 	
 	private void incrementSpecialAbilityCounter() {
+		specialAbilityCounter++;
+
 		TimerTask t = new TimerTask() {
 			@Override
 			public void run() {
@@ -171,7 +172,8 @@ public class Board implements Serializable{
 		
 		// Present statistics to listeners if this was a board a player was attacking
 		if(isAI) {
-			GameplayResult gr = new GameplayResult(hitCount, movesCount, startTime, LocalTime.now(), size());
+			GameplayResult gr = new GameplayResult(hitCount, movesCount, startTime, LocalTime.now(), 5 - size());
+			System.out.printf("%d : %d\n", hitCount, movesCount);
 			PropertyChangeEvent pce2 = new PropertyChangeEvent(this, AllProperties.GAME_STATS_READY.property(), null, gr);
 			pcs.firePropertyChange(pce2);
 		}
@@ -527,5 +529,18 @@ public class Board implements Serializable{
 	 */
 	public boolean remove(Ship s) {
 		return allShips.removeShip(s);
+	}
+	
+	/**
+	 * Suicide this board for testing/debug purposes.
+	 */
+	public void cheatWin() {
+		for (Ship s : allShips) {
+			allShips.cheatDestroyShip(s);
+			hitCount += s.getLength();
+			movesCount += s.getLength();
+		}
+		
+		endGame();
 	}
 }

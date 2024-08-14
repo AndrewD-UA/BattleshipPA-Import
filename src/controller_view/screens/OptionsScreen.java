@@ -11,9 +11,16 @@ import javafx.scene.Node;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
 import javafx.scene.control.Slider;
+import javafx.scene.control.Tooltip;
 import javafx.scene.input.KeyCode;
+import javafx.scene.layout.Border;
 import javafx.scene.layout.BorderPane;
+import javafx.scene.layout.BorderStroke;
+import javafx.scene.layout.BorderStrokeStyle;
+import javafx.scene.layout.BorderWidths;
+import javafx.scene.layout.CornerRadii;
 import javafx.scene.layout.GridPane;
+import javafx.scene.paint.Color;
 import javafx.scene.text.Font;
 import javafx.scene.text.FontWeight;
 
@@ -33,10 +40,10 @@ public class OptionsScreen extends SwitchableScreen {
 	 */
 	private GridPane allOptions;
 	
-	private Button helpButton = new Button("Go To Help Screen");
-	
-	private Button backButton = new Button("Quit to Main Menu");
-	private Button fullscreenButton = new Button("Fullscreen: off");
+	private Button helpButton = new Button("Help Screen");	
+	private Button menuButton = new Button("Main Menu");
+	private Button fullscreenButton = new Button("Fullscreen");
+	private Button backButton = new Button("Exit Options");
 	private Slider soundSlider = new Slider(0, 100, 50);
 
 	/**
@@ -52,7 +59,7 @@ public class OptionsScreen extends SwitchableScreen {
 	 * This array is of type Node so non-button elements can be added.
 	 */
 
-	private Node[][] options = { { fullscreenButton }, { soundSlider } // Replace Button with Slider
+	private Node[][] options = { { fullscreenButton, helpButton }, { soundSlider, menuButton } // Replace Button with Slider
 	};
 
 
@@ -66,7 +73,6 @@ public class OptionsScreen extends SwitchableScreen {
 	private static final int OPTIONS_HGAP = 30;
 	private static final int OPTIONS_VGAP = 100;
 
-	private boolean fullscreen = false;
 	private AllProperties returnScene = AllProperties.BACK_TO_MENU;
 
 	/**
@@ -86,7 +92,7 @@ public class OptionsScreen extends SwitchableScreen {
 		
 		window.setTop(info);
 		window.setCenter(allOptions);
-		window.setBottom(backButton);		
+		window.setBottom(backButton);
 	}
 	
 	private void initSlider() {
@@ -95,11 +101,12 @@ public class OptionsScreen extends SwitchableScreen {
 		soundSlider.setMajorTickUnit(20);
 		soundSlider.setMinorTickCount(5);
 		soundSlider.setBlockIncrement(10);
-		soundSlider.setStyle(CSS.SHIP_PICKER_ENTERED);
 		soundSlider.maxHeightProperty().bind(fullscreenButton.heightProperty());
 		soundSlider.minHeightProperty().bind(fullscreenButton.heightProperty());
 		soundSlider.maxWidthProperty().bind(fullscreenButton.widthProperty());
 		soundSlider.minWidthProperty().bind(fullscreenButton.widthProperty());
+		Tooltip tooltip = new Tooltip("Volume");
+		soundSlider.setTooltip(tooltip);
 	}
 	
 	/**
@@ -110,32 +117,33 @@ public class OptionsScreen extends SwitchableScreen {
 	 */
 	private void initOptionsGridPane() {
 	    allOptions = new GridPane();
-
+	    
+	    // All other buttons will be bound to this width
+	    fullscreenButton.setMaxWidth(350);
+	    fullscreenButton.setMinWidth(350);
+	    
 	    // Add all buttons to the GridPane
 	    for (int column = 0; column < options.length; column++) {
 	        for (int row = 0; row < options[column].length; row++) {
 	            Node current = options[column][row];
 	            if (current instanceof Button) {
-	                ((Button) current).setFont(OPTIONS_FONT);
+	            	Button currButton = (Button) current;
+	                currButton.setFont(OPTIONS_FONT);
+	                currButton.prefWidthProperty().bind(fullscreenButton.widthProperty());
 	            }
-
+	            
+                current.setStyle(CSS.SHIP_PICKER_ENTERED);
 	            // Add the button to the appropriate column and row
 	            allOptions.add(current, column, row);
 	        }
 	    }
-	    
-	    // Adding help screen button 
-	    allOptions.add(helpButton, 3, 0); 
 
-	    fullscreenButton.setStyle(CSS.SHIP_PICKER_ENTERED);
-
-	    // Initialize the "back to main menu" button
 	    BorderPane.setAlignment(backButton, Pos.TOP_CENTER);
 	    BorderPane.setMargin(backButton, TEST_MARGIN);
-
-	    backButton.setFont(BUTTON_FONT);
+	    
+	    backButton.setFont(OPTIONS_FONT);
 	    backButton.setStyle(CSS.SHIP_PICKER_ENTERED);
-
+	    
 	    // Generic options for the GridPane container
 	    allOptions.setAlignment(Pos.CENTER);
 	    allOptions.setVgap(OPTIONS_VGAP);
@@ -150,8 +158,10 @@ public class OptionsScreen extends SwitchableScreen {
 	private Label initLabel() {
 		Label info = new Label("OPTIONS");
 		BorderPane.setAlignment(info, Pos.CENTER);
+		BorderPane.setMargin(info, new Insets(10, 0, 0, 0));
 		info.setFont(OPTIONS_FONT);
 		info.setStyle(CSS.SHIP_PICKER_ENTERED);
+		info.setBorder(new Border(new BorderStroke(Color.TRANSPARENT, BorderStrokeStyle.SOLID, CornerRadii.EMPTY, new BorderWidths(10))));
 		
 		return info;		
 	}
@@ -162,29 +172,14 @@ public class OptionsScreen extends SwitchableScreen {
 	 * Adds functionality to all options and buttons.
 	 */
 	private void initHandlers() {
-		// Notify the main window the user wants to go back to the menu
-		backButton.setOnAction((event) -> {
-			playSound(BUTTON_CLICK_SOUND, false);
-			PropertyChangeEvent pce = new PropertyChangeEvent(this, AllProperties.SWITCH_SCREEN.property(), AllProperties.RESET_GAME, AllProperties.BACK_TO_MENU);
-			fireEvent(pce);
-		});
-
-		// If the fullscreen button is clicked, swap the value of fullscreen for text
-		// display
-		// Then, notify the main window fullscreen is/not desired
-		fullscreenButton.setOnAction((event) -> {
-			playSound(BUTTON_CLICK_SOUND, false);
-			fullscreen = !fullscreen;
-			fullscreenButton.setText(String.format("Fullscreen: %s", fullscreen ? "on" : "off"));
-			PropertyChangeEvent pce = new PropertyChangeEvent(this, AllProperties.SET_FULLSCREEN.property(),
-					!fullscreen, fullscreen);
-			fireEvent(pce);
-		});
+		registerButtonAction(menuButton, AllProperties.SWITCH_SCREEN, AllProperties.RESET_GAME, AllProperties.BACK_TO_MENU);
+		registerButtonAction(backButton, AllProperties.SWITCH_SCREEN, null, returnScene);
+		registerButtonAction(helpButton, AllProperties.SWITCH_SCREEN, null, AllProperties.HELP_SCREEN);
 		
-		helpButton.setOnAction((event) -> {
-		    playSound(BUTTON_CLICK_SOUND, false);
-		    PropertyChangeEvent pce = new PropertyChangeEvent(this, AllProperties.SWITCH_SCREEN.property(),
-		            null, AllProperties.HELP_SCREEN);
+		//Fullscreen button requires custom logic to swap 
+		fullscreenButton.setOnAction((e)->{
+			playSound(BUTTON_CLICK_SOUND, false);
+			PropertyChangeEvent pce = new PropertyChangeEvent(this, AllProperties.SET_FULLSCREEN.property(), null, null);
 		    fireEvent(pce);
 		});
 
@@ -198,6 +193,14 @@ public class OptionsScreen extends SwitchableScreen {
 		soundSlider.setOnMouseReleased((e)->{
 			double newLevel = soundSlider.getValue() / 100;
 			PlayBattleship.getInstance().setSoundLevel(newLevel);
+		});
+	}
+	
+	private void registerButtonAction(Button button, AllProperties event, Object oldVal, Object newVal) {
+		button.setOnAction((e)->{
+			playSound(BUTTON_CLICK_SOUND, false);
+			PropertyChangeEvent pce = new PropertyChangeEvent(this, event.property(), oldVal, newVal);
+		    fireEvent(pce);
 		});
 	}
 

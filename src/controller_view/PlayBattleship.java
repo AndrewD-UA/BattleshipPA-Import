@@ -34,12 +34,12 @@ public class PlayBattleship extends Application implements PropertyChangeListene
 		launch();
 	}
 	
-	private StartScreen startScene;
-	private ShipPickScreen shipPickScene;
-	private OptionsScreen optionsScene;
-	private GamePlayScreen gamePlayScene;
-	private GameOverScreen gameOverScene;
-	private HelpScreen 	   helpScene;
+	private StartScreen 	startScene;
+	private ShipPickScreen 	shipPickScene;
+	private OptionsScreen 	optionsScene;
+	private GamePlayScreen 	gamePlayScene;
+	private GameOverScreen 	gameOverScene;
+	private HelpScreen 	   	helpScene;
 	
 	/**
 	 * The stage on which all screens are displayed
@@ -105,14 +105,12 @@ public class PlayBattleship extends Application implements PropertyChangeListene
 	 * Create and register each Screen with the main application
 	 */
 	private void initScenes() {
-		helpScene = (HelpScreen) getNewScreen("help");
-
-		startScene = (StartScreen) getNewScreen("start");
-		shipPickScene = (ShipPickScreen) getNewScreen("shipPicker");
-		optionsScene = (OptionsScreen) getNewScreen("options");
-		gamePlayScene = (GamePlayScreen) getNewScreen("gameplay");
-		gameOverScene = (GameOverScreen) getNewScreen("gameover");
-		
+		helpScene 		= (HelpScreen) 		getNewScreen("help");
+		startScene 		= (StartScreen) 	getNewScreen("start");
+		shipPickScene 	= (ShipPickScreen) 	getNewScreen("shipPicker");
+		optionsScene 	= (OptionsScreen) 	getNewScreen("options");
+		gamePlayScene 	= (GamePlayScreen) 	getNewScreen("gameplay");
+		gameOverScene 	= (GameOverScreen) 	getNewScreen("gameover");
 
 		shipPickScene.addListener(gamePlayScene);
 		gamePlayScene.addListener(gameOverScene);
@@ -151,14 +149,18 @@ public class PlayBattleship extends Application implements PropertyChangeListene
 	@Override
 	public void propertyChange(PropertyChangeEvent evt) {
 		String prop = evt.getPropertyName();
+		
+		// Logic for switching screens
 		if (prop.equals(AllProperties.SWITCH_SCREEN.property())) {
 			AllProperties goingTo = (AllProperties) evt.getNewValue();	
 			AllProperties comingFrom = (AllProperties) evt.getOldValue();
 			
+			// Store the last screen if we are going to the options screen
 			if (goingTo == AllProperties.OPEN_OPTIONS) {
 				optionsScene.setReturn(comingFrom);
 			}
 			
+			// Reset each scene if the gameplay loop is restarting
 			if (comingFrom == AllProperties.RESET_GAME) {
 				shipPickScene.reset();
 				gamePlayScene.reset();
@@ -167,8 +169,11 @@ public class PlayBattleship extends Application implements PropertyChangeListene
 			switchScreenTo(goingTo);
 		} 
 		
+		// Logic for manipulating fullscreen mode
 		if (prop.equals(AllProperties.SET_FULLSCREEN.property())) {
-			isFullscreen = (boolean) evt.getNewValue();
+			System.out.println("received fullscreen");
+			isFullscreen = !isFullscreen;
+			System.out.println(isFullscreen);
 			stage.setMaximized(isFullscreen);
 			stage.setFullScreen(isFullscreen);
 			if (!isFullscreen) {
@@ -183,6 +188,10 @@ public class PlayBattleship extends Application implements PropertyChangeListene
 	    }
 	}
 	
+	/**
+	 * Utility function to queue up a different stage than is currently on the screen.
+	 * @param nextScreen	Enum representation of the screen to switch to.
+	 */
 	private void switchScreenTo(AllProperties nextScreen) {
 		switch(nextScreen) {
 			case OPEN_OPTIONS:	changeScene(optionsScene);		break;
@@ -201,12 +210,19 @@ public class PlayBattleship extends Application implements PropertyChangeListene
 		}
 	}
 	
+	/**
+	 * Switch the currently loaded and displayed Scene.
+	 * @param s	Scene to change to
+	 */
 	private void changeScene(Scene s) {
 		stage.setScene(s);
 		stage.setMaximized(isFullscreen);
 		stage.setFullScreen(isFullscreen);
 	}
 	
+	/**
+	 * Initialize the game's sound.
+	 */
 	private void initSound() {
 		soundSetting = 0.01;
 		activeMediaPlayers = new ArrayList<MediaPlayer>();

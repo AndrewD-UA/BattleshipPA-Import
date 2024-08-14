@@ -1,6 +1,7 @@
 package controller_view.screens;
 
 import java.beans.PropertyChangeEvent;
+import java.time.LocalTime;
 
 import controller_view.AllProperties;
 import controller_view.PlayBattleship;
@@ -37,9 +38,10 @@ import model.ai.HardAI;
 import model.ai.ModerateAI;
 import model.animations.HitResultAnimation;
 import model.board.Board;
+import model.board.GameplayResult;
 
 /**
- * The screen used to actually play the game and enter moves
+ * The screen used to actually play the game and enter moves.
  * 
  * Background image credit to lachetas on Freepik
  * <a href="https://www.freepik.com/free-photo/sea-seen-from_977581.htm#query=ocean%20top%20down&position=15&from_view=keyword&track=ais&uuid=0256255b-9a43-4074-a9b7-edd4256a5199">Image by lachetas</a> on Freepik
@@ -89,6 +91,15 @@ public class GamePlayScreen extends SwitchableScreen {
 		getRoot().setOnKeyReleased((e)->{
 			if (e.getCode() == KeyCode.ESCAPE) {
 				fireEvent(new PropertyChangeEvent(this, AllProperties.SWITCH_SCREEN.property(), AllProperties.DISPLAY_BOARD, AllProperties.OPEN_OPTIONS));
+			}
+			
+			else if (e.getCode() == KeyCode.E) {
+				GameplayResult gpr = new GameplayResult(17, 17, LocalTime.now(), LocalTime.now(), 1);
+				fireEvent(new PropertyChangeEvent(this, AllProperties.GAME_STATS_READY.property(), null, gpr));
+			}
+			
+			else if (e.getCode() == KeyCode.F) {
+				aiBoard.getBoard().cheatWin();
 			}
 		});
 	}

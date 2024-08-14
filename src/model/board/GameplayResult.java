@@ -28,7 +28,6 @@ public class GameplayResult {
 		this.moves = moves;		
 		this.shipsSunk = shipsSunk;
 		this.timeDuration = Duration.between(startTime, endTime).toSeconds();
-
 	}
 	
 	/**
@@ -52,7 +51,7 @@ public class GameplayResult {
 	 * @return	Integer from 0-100
 	 */
 	public int getPercentHits() {
-		return (int) ((hits / moves) * 100);
+		return (int) (((double)hits / moves) * 100);
 	}
 	
 	/**
