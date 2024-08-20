@@ -13,7 +13,7 @@ import model.battleship.Ship;
 import model.battleship.ShipCollection;
 import model.board.Board;
 import model.board.Direction;
-import model.board.GameplayResult;
+import model.board.GameplayRecord;
 
 public class BoardTest implements PropertyChangeListener{
 	
@@ -98,12 +98,10 @@ public class BoardTest implements PropertyChangeListener{
 		}
 		
 		if (evt.getPropertyName().equals(AllProperties.GAME_STATS_READY.property())) {
-			GameplayResult gr = (GameplayResult) evt.getNewValue();
-			System.out.println(gr.getGameDuration());
-			System.out.println(gr.getHits());
-			System.out.println(gr.getMoves());
-			System.out.println(gr.getShipsSunk());
-
+			GameplayRecord gr = (GameplayRecord) evt.getNewValue();
+			System.out.println(gr.duration());
+			System.out.println(gr.hits());
+			System.out.println(gr.shipsSunk());
 		}
 	}
 }

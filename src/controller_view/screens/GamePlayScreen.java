@@ -1,7 +1,6 @@
 package controller_view.screens;
 
 import java.beans.PropertyChangeEvent;
-import java.time.LocalTime;
 
 import controller_view.AllProperties;
 import controller_view.PlayBattleship;
@@ -38,7 +37,7 @@ import model.ai.HardAI;
 import model.ai.ModerateAI;
 import model.animations.HitResultAnimation;
 import model.board.Board;
-import model.board.GameplayResult;
+import model.board.GameplayRecord;
 
 /**
  * The screen used to actually play the game and enter moves.
@@ -94,8 +93,10 @@ public class GamePlayScreen extends SwitchableScreen {
 			}
 			
 			else if (e.getCode() == KeyCode.E) {
-				GameplayResult gpr = new GameplayResult(17, 17, LocalTime.now(), LocalTime.now(), 1);
-				fireEvent(new PropertyChangeEvent(this, AllProperties.GAME_STATS_READY.property(), null, gpr));
+				GameplayRecord gr= new GameplayRecord(17, 100.00, 5, 1);
+				fireEvent(new PropertyChangeEvent(this, AllProperties.GAME_STATS_READY.property(), null, gr));
+				fireEvent(new PropertyChangeEvent(this, AllProperties.SWITCH_SCREEN.property(), null,
+						AllProperties.GAME_OVER));
 			}
 			
 			else if (e.getCode() == KeyCode.F) {

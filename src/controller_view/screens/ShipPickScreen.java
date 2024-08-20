@@ -231,6 +231,8 @@ public class ShipPickScreen extends SwitchableScreen implements PropertyChangeLi
 		window.setCenter(boardView);
 	}
 
+	private static final Font BUTTON_FONT = Font.font(25);
+
 	/**
 	 * Private inner class detailing how each Difficulty selector button is
 	 * constructed.
@@ -239,7 +241,6 @@ public class ShipPickScreen extends SwitchableScreen implements PropertyChangeLi
 	 */
 	public class DifficultyButton extends ToggleButton {
 
-		private static final Font BUTTON_FONT = Font.font(25);
 		private Difficulties difficulty;
 
 		/**

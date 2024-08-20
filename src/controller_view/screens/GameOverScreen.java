@@ -15,7 +15,7 @@ import javafx.scene.text.Font;
 import javafx.scene.text.FontWeight;
 import javafx.scene.text.Text;
 import javafx.util.Duration;
-import model.board.GameplayResult;
+import model.board.GameplayRecord;
 
 /**
  * The screen to be displayed when the game ends.
@@ -136,21 +136,22 @@ public class GameOverScreen extends SwitchableScreen {
 	@Override
 	public void propertyChange(PropertyChangeEvent evt) {
 		if (evt.getPropertyName().equals(AllProperties.GAME_STATS_READY.property())) {
-			loadStatistics((GameplayResult) evt.getNewValue());
+			loadStatistics((GameplayRecord) evt.getNewValue());
 		}
 	}
 
-	private void loadStatistics(GameplayResult results) {
-		String moves = String.format("Hits: %d", results.getHits());
+	private void loadStatistics(GameplayRecord results) {
+		System.out.println("loading stats");
+		String moves = String.format("Hits: %d", results.hits());
 		hitStats.setText(moves);
 		
-		String percentHits = String.format("Hit Ratio: %d", results.getPercentHits());
+		String percentHits = String.format("Hit Ratio: %.2f", results.hitRatio());
 		ratioStats.setText(percentHits + "%");
 		
-		String sunkShips = String.format("Ships Sunk: %d", results.getShipsSunk());
+		String sunkShips = String.format("Ships Sunk: %d", results.shipsSunk());
 		sunkStats.setText(sunkShips);
 		
-		long duration = results.getGameDuration();
+		long duration = results.duration();
 		String gameDuration = String.format("Game Time: %d minutes, %d seconds", (int) (duration / 60), (int) (duration % 60));
 		gameTimeStats.setText(gameDuration);
 		

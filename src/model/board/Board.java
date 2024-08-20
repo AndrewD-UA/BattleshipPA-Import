@@ -4,6 +4,7 @@ import java.beans.PropertyChangeEvent;
 import java.beans.PropertyChangeListener;
 import java.beans.PropertyChangeSupport;
 import java.io.Serializable;
+import java.time.Duration;
 import java.time.LocalTime;
 import java.util.ArrayList;
 import java.util.Random;
@@ -172,7 +173,9 @@ public class Board implements Serializable{
 		
 		// Present statistics to listeners if this was a board a player was attacking
 		if(isAI) {
-			GameplayResult gr = new GameplayResult(hitCount, movesCount, startTime, LocalTime.now(), 5 - size());
+			Duration gameLength = Duration.between(LocalTime.now(), startTime);
+			double hitRatio = ((double) hitCount) / movesCount * 100;
+			GameplayRecord gr = new GameplayRecord(hitCount, hitRatio, 5 - size(), gameLength.toSeconds());
 			PropertyChangeEvent pce2 = new PropertyChangeEvent(this, AllProperties.GAME_STATS_READY.property(), null, gr);
 			pcs.firePropertyChange(pce2);
 		}
